@@ -144,10 +144,27 @@ func UnsafeGuessKindToResource(kind schema.GroupVersionKind) ( /*plural*/ schema
 	case "s":
 		return kind.GroupVersion().WithResource(singularName + "es"), singular
 	case "y":
+		// A "y" preceded by a vowel (e.g. "Gateway") is pluralized with a
+		// trailing "s" ("gateways"), matching English rules and the plural
+		// names Kubernetes APIs actually register. Only a "y" preceded by a
+		// consonant becomes "ies" (e.g. "Policy" -> "policies").
+		if len(singularName) > 1 && isVowel(singularName[len(singularName)-2]) {
+			return kind.GroupVersion().WithResource(singularName + "s"), singular
+		}
 		return kind.GroupVersion().WithResource(strings.TrimSuffix(singularName, "y") + "ies"), singular
 	}
 
 	return kind.GroupVersion().WithResource(singularName + "s"), singular
+}
+
+// isVowel reports whether the given ASCII byte is an English vowel.
+func isVowel(ch byte) bool {
+	switch ch {
+	case 'a', 'e', 'i', 'o', 'u':
+		return true
+	default:
+		return false
+	}
 }
 
 // ResourceSingularizer implements RESTMapper

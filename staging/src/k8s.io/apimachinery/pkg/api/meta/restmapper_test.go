@@ -446,8 +446,11 @@ func TestKindToResource(t *testing.T) {
 
 		{Kind: "ReplicationController", Plural: "replicationcontrollers", Singular: "replicationcontroller"},
 
-		// Add "ies" when ending with "y"
+		// Add "ies" when ending with a consonant followed by "y"
 		{Kind: "ImageRepository", Plural: "imagerepositories", Singular: "imagerepository"},
+		// Add "s" when ending with a vowel followed by "y"
+		{Kind: "Gateway", Plural: "gateways", Singular: "gateway"},
+		{Kind: "Array", Plural: "arrays", Singular: "array"},
 		// Add "es" when ending with "s"
 		{Kind: "miss", Plural: "misses", Singular: "miss"},
 		// Add "s" otherwise
